@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import TipKit
 
 @main
 struct TipKitProjectApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
         }
     }
 }
