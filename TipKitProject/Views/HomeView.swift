@@ -43,7 +43,7 @@ struct HomeView: View {
                                 .foregroundStyle(Color.accentColor)
                         })
                         NavigationLink(destination: TipInvalidateWithReasonView(), label: {
-                            Text("Tip gets invalidated after a reason")
+                            Text("Tip getting invalidated after a reason")
                                 .foregroundStyle(Color.accentColor)
                         })
                     } header: {

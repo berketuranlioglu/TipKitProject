@@ -18,60 +18,58 @@ struct TipInvalidateWithReasonView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 20) {
-                Text("Tips can be invalidated under certain reasons in order not to poke user every time the view has been appeared.")
-                
-                Text("The invalidation is done with\n")
-                + Text(".invalidate(\n\treason: .userPerformedAction\n)")
-                    .font(Font.system(.body, design: .monospaced))
-                    .foregroundStyle(Color.purple)
-                
-                Text("In this example, the tip will be ignored after the latest iOS and Xcode versions are selected.")
-                    .multilineTextAlignment(.leading)
-                
-                Spacer()
-                    .frame(height: 40)
-                
-                HStack {
-                    Text("iOS Version for TipKit:")
+            ScrollView {
+                VStack(spacing: 0) {
+                    Text("Tips can be invalidated under certain reasons in order not to poke user every time the view has been appeared.")
+                        .multilineTextAlignment(.leading)
+                        .padding(.vertical, 20)
+                    
+                    Text("The invalidation is done with\n")
+                    + Text(".invalidate(\n\treason: .userPerformedAction\n)")
+                        .font(Font.system(.body, design: .monospaced))
+                        .foregroundStyle(Color.purple)
+                    
+                    Text("In this example, the tip will be ignored after the latest iOS and Xcode versions are selected.")
+                        .multilineTextAlignment(.leading)
+                        .padding(.vertical, 20)
+                    
                     Spacer()
-                    Picker("iOS Version Selection", selection: $selectedIos) {
-                        ForEach(iosVersions, id: \.self) { ver in
-                            Text("\(ver, specifier: "%.1f")")
+                        .frame(height: 20)
+                    
+                    HStack {
+                        Text("iOS:")
+                        Picker("iOS Version Selection", selection: $selectedIos) {
+                            ForEach(iosVersions, id: \.self) { ver in
+                                Text("\(ver, specifier: "%.1f")")
+                            }
+                        }
+                        Text("Xcode:")
+                        Picker("Xcode Version Selection", selection: $selectedXcode) {
+                            ForEach(xcodeVersions, id: \.self) { ver in
+                                Text("\(ver, specifier: "%.1f")")
+                            }
                         }
                     }
-                }
-                .padding(.horizontal)
-                
-                HStack {
-                    Text("Xcode Version for TipKit:")
-                    Spacer()
-                    Picker("Xcode Version Selection", selection: $selectedXcode) {
-                        ForEach(xcodeVersions, id: \.self) { ver in
-                            Text("\(ver, specifier: "%.1f")")
+                    .task {
+                        try? await Tips.configure {
+                            DisplayFrequency(.immediate)
+                            DatastoreLocation(.applicationDefault)
                         }
                     }
-                }
-                .padding(.horizontal)
-                .task {
-                    try? await Tips.configure {
-                        DisplayFrequency(.immediate)
-                        DatastoreLocation(.applicationDefault)
+                    
+                    TipView(TipInvalidateWithReason(), arrowEdge: .top)
+                    
+                    Button("Done") {
+                        if selectedIos == 17.0 && selectedXcode == 15.0 {
+                            TipInvalidateWithReason().invalidate(reason: .userPerformedAction)
+                        }
                     }
-                }
-                
-                TipView(TipInvalidateWithReason(), arrowEdge: .top)
-                
-                Button("Done") {
-                    if selectedIos == 17.0 && selectedXcode == 15.0 {
-                        TipInvalidateWithReason().invalidate(reason: .userPerformedAction)
-                    }
+                    .padding(.all)
+                    
+                    Spacer()
                 }
                 .padding(.all)
-                
-                Spacer()
             }
-            .padding(.all)
             .navigationTitle("Invalidatable Tip")
         }
     }

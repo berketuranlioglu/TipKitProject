@@ -34,7 +34,7 @@ struct TipAfterCounterView: View {
                 + Text(" tips can be triggered as well.")
                 
                 Spacer()
-                    .frame(height: 80)
+                    .frame(height: 4)
                 
                 Text("Counter: \(counter)")
                 
